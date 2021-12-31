@@ -6,17 +6,21 @@ authors = ["Kawaguchi Makoto"]
 
 [tool.poetry.dependencies]
 python = "^3.9"
-PyMySQL = "^1.0.2"
 python-dotenv = "^0.19.2"
 fastapi = "^0.70.1"
 uvicorn = "^0.16.0"
 pydantic = "^1.8.2"
+python-ulid = "^1.0.3"
+SQLAlchemy = {extras = ["mypy"], version = "^1.4.29"}
+aiomysql = "^0.0.22"
 
 [tool.poetry.dev-dependencies]
 black = "^21.12b0"
 pyproject-flake8 = "^0.0.1-alpha.2"
 mypy = "^0.930"
 types-PyMySQL = "^1.0.7"
+pytest = "^6.2.5"
+requests = "^2.26.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
