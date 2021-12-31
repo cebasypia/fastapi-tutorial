@@ -17,3 +17,10 @@ async def create_user(db: AsyncSession, user_create: UserCreate) -> User:
     await db.commit()
     await db.refresh(user)
     return user
+
+
+async def get_user(db: AsyncSession, user: User) -> User:
+    result = await db.execute(select(User).filter(User.id == user.id))
+    users: list[User] = result.first()
+    return users[0] if users is not None else None
+
