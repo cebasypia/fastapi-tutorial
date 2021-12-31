@@ -34,3 +34,12 @@ async def update_user(user_id: str, user_body: schema.UserCreate, db: AsyncSessi
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
 
     return await user_crud.update_user(db, user_body, user)
+
+
+@router.delete("/users/{user_id}", response_model=None)
+async def delete_user(user_id: str, db: AsyncSession = Depends(get_db)) -> None:
+    user: schema.User = await user_crud.get_user(db, schema.User(id=user_id))
+    if user is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+
+    return await user_crud.delete_user(db, user)
