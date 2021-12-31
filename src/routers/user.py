@@ -36,7 +36,7 @@ async def update_user(user_id: str, user_body: schema.UserCreate, db: AsyncSessi
     return await user_crud.update_user(db, user_body, user)
 
 
-@router.delete("/users/{user_id}", response_model=None)
+@router.delete("/users/{user_id}", response_model=None, status_code=status.HTTP_204_NO_CONTENT)
 async def delete_user(user_id: str, db: AsyncSession = Depends(get_db)) -> None:
     user: schema.User = await user_crud.get_user(db, schema.User(id=user_id))
     if user is None:
