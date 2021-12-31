@@ -26,3 +26,11 @@ async def get_user(user_id: str, db: AsyncSession = Depends(get_db)) -> schema.U
 
     return user
 
+
+@router.put("/users/{user_id}", response_model=schema.User, status_code=status.HTTP_200_OK)
+async def update_user(user_id: str, user_body: schema.UserCreate, db: AsyncSession = Depends(get_db)) -> schema.User:
+    user: schema.User = await user_crud.get_user(db, schema.User(id=user_id))
+    if user is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+
+    return await user_crud.update_user(db, user_body, user)

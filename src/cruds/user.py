@@ -24,3 +24,10 @@ async def get_user(db: AsyncSession, user: User) -> User:
     users: list[User] = result.first()
     return users[0] if users is not None else None
 
+
+async def update_user(db: AsyncSession, user_create: UserCreate, user: User) -> User:
+    user.name = user_create.name or user.name
+    db.add(user)
+    await db.commit()
+    await db.refresh(user)
+    return user
