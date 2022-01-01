@@ -1,9 +1,10 @@
+import importlib
 from logging.config import fileConfig
 
-from sqlalchemy import engine_from_config
-from sqlalchemy import pool
-
 from alembic import context
+from sqlalchemy import engine_from_config, pool
+from sqlalchemy.schema import MetaData
+
 from config import DB_HOST, DB_PASSWORD, DB_PORT, DB_USER
 
 # this is the Alembic Config object, which provides
@@ -25,7 +26,28 @@ fileConfig(config.config_file_name)
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
-target_metadata = None
+# target_metadata = None
+
+target_models = [
+    "src.models.user",
+]
+
+
+def import_model_bases():
+    """import all target models base metadatas."""
+    lst = list(map(lambda x: importlib.import_module(x).Base.metadata, target_models))
+    return lst
+
+
+def combine_metadata(lst):
+    m = MetaData()
+    for metadata in lst:
+        for t in metadata.tables.values():
+            t.tometadata(m)
+    return m
+
+
+target_metadata = combine_metadata(import_model_bases())
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
@@ -71,9 +93,7 @@ def run_migrations_online():
     )
 
     with connectable.connect() as connection:
-        context.configure(
-            connection=connection, target_metadata=target_metadata
-        )
+        context.configure(connection=connection, target_metadata=target_metadata, compare_type=True)
 
         with context.begin_transaction():
             context.run_migrations()
