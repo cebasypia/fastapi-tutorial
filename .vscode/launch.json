@@ -12,7 +12,7 @@
             "args": [
                 "src.main:app"
             ],
-            "jinja": true
+            "jinja": true,
         }
     ]
 }
