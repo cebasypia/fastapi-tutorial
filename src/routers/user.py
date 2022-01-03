@@ -3,6 +3,7 @@ from sqlalchemy.ext.asyncio.session import AsyncSession
 
 import src.cruds as crud
 import src.schemas as schema
+from src import firebase
 from src.db import get_db
 
 router = APIRouter()
@@ -19,7 +20,9 @@ async def create_user(user_body: schema.UserCreate, db: AsyncSession = Depends(g
 
 
 @router.get("/users/{user_id}", response_model=schema.User, status_code=status.HTTP_200_OK)
-async def get_user(user_id: str, db: AsyncSession = Depends(get_db)) -> schema.User:
+async def get_user(
+    user_id: str, current_user: firebase.AuthUser = Depends(firebase.get_user), db: AsyncSession = Depends(get_db)
+) -> schema.User:
     user: schema.User = await crud.get_user(db, schema.User(id=user_id))
     if user is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
