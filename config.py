@@ -3,7 +3,7 @@ from os.path import dirname, join
 
 from dotenv import load_dotenv
 
-env_path = join(dirname(__file__), ".env")
+env_path = join(dirname(__file__), "sercrets/.env")
 load_dotenv(env_path)
 
 
