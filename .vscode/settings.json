@@ -1,4 +1,8 @@
 {
+    "workbench.colorCustomizations": {
+        "titleBar.activeBackground": "#ff9966",
+        "titleBar.activeForeground": "#ffffff",
+    },
     "python.formatting.provider": "black",
     "editor.formatOnSave": true,
     "editor.codeActionsOnSave": {
