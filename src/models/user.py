@@ -7,4 +7,4 @@ class User(Base):
     __tablename__ = "user"
 
     id = Column(String(26), primary_key=True)
-    name = Column(String(10))
+    name = Column(String(50))
