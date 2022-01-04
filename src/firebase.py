@@ -25,5 +25,15 @@ def get_user(res: Response, cred: HTTPAuthorizationCredentials = Depends(HTTPBea
             headers={"WWW-Authenticate": 'Bearer error="invalid_token"'},
         )
     res.headers["WWW-Authenticate"] = 'Bearer realm="auth_required"'
-    print(type(decoded_token))
     return decoded_token
+
+
+def is_authenticated(cred: HTTPAuthorizationCredentials = Depends(HTTPBearer(auto_error=False))) -> bool:
+    if cred is None:
+        return False
+    try:
+        decoded_token = auth.verify_id_token(cred.credentials)
+    except Exception:
+        return False
+
+    return bool(decoded_token["uid"])

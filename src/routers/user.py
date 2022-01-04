@@ -21,8 +21,15 @@ async def create_user(user_body: schema.UserCreate, db: AsyncSession = Depends(g
 
 @router.get("/users/{user_id}", response_model=schema.User, status_code=status.HTTP_200_OK)
 async def get_user(
-    user_id: str, current_user: firebase.AuthUser = Depends(firebase.get_user), db: AsyncSession = Depends(get_db)
+    user_id: str, is_authenticated: bool = Depends(firebase.is_authenticated), db: AsyncSession = Depends(get_db)
 ) -> schema.User:
+    if is_authenticated is False:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid authentication credentials.",
+            headers={"WWW-Authenticate": 'Bearer error="invalid_token"'},
+        )
+
     user: schema.User = await crud.get_user(db, schema.User(id=user_id))
     if user is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
